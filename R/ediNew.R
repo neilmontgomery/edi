@@ -186,18 +186,23 @@ genH <- function(fname, enc, pclaims, pl, directory="hfiles", debug = FALSE) {
 
     ## Go through the encounters
     for(i in 1:nrow(enc)) {
+        RMB <- grepl("RMB", enc$cd[i])
+
         pl_ix <- grep(substr(enc$hcn[i], 1, 10), pl$hcn)
         ref <- enc$ref[i]
         if(debug) { print(pl$hcn[pl_ix]) }
         ## Claim header
         fl <- c(fl, paste("HEH",
-                          pl$hcn[pl_ix],   # HCN
-                          pl$dob[pl_ix],   # DOB
+                          ifelse(!RMB, pl$hcn[pl_ix], spaces(12)),   # HCN
+                          pl$dob[pl_ix],  # DOB
                           an + i,
-                          ifelse(grepl("ph", enc$cd[i]), "PHON", "HCPP"),
+                          ifelse(grepl("ph", enc$cd[i]), "PHON",
+                                 paste(ifelse(RMB, "RMB", "HCP"), "P",
+                                       sep="")),
                           ref,
                           spaces(38),
                           sep=""))
+
         ## Item record
         ## Service date (still in date format)
         da <- enc$s.date[i]
@@ -208,6 +213,17 @@ genH <- function(fname, enc, pclaims, pl, directory="hfiles", debug = FALSE) {
         cd <- gsub("^\\s+|\\s+$", "", cd)
         ## Pick the diagnosis
         dx <- dx.priority(grep("^\\d{3}", cd, value=T))
+
+        if(RMB) {
+          fl <- c(fl, paste("HER",
+                            pl$hcn,
+                            pl$ln,
+                            pl$fn,
+                            pl$sx,
+                            substr(grep("RMB", cd, value=T), 4,5),
+                            spaces(47),
+                            sep=""))
+        }
 
 
         ## Visit type
