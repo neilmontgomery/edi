@@ -216,10 +216,10 @@ genH <- function(fname, enc, pclaims, pl, directory="hfiles", debug = FALSE) {
 
         if(RMB) {
           fl <- c(fl, paste("HER",
-                            pl$hcn,
-                            pl$ln,
-                            pl$fn,
-                            pl$sx,
+                            pl$hcn[pl_ix],
+                            pl$ln[pl_ix],
+                            pl$fn[pl_ix],
+                            pl$sx[pl_ix],
                             substr(grep("RMB", cd, value=T), 4,5),
                             spaces(47),
                             sep=""))
@@ -437,10 +437,15 @@ genH <- function(fname, enc, pclaims, pl, directory="hfiles", debug = FALSE) {
 
 
     ## Trailer
+    n_HEH <- length(grep("HEH", fl)) - length(grep("HER", fl))
+    n_HER <- length(grep("HER", fl))
+    n_HET <- length(grep("HET", fl))
+
+
     fl <- c(fl, paste("HEE",
-                      sprintf("%04g", length(grep("HEH", fl))),
-                      sprintf("%04g", length(grep("HER", fl))),
-                      sprintf("%05g", length(grep("HET", fl))),
+                      sprintf("%04g", n_HEH),
+                      sprintf("%04g", n_HER),
+                      sprintf("%05g", n_HET),
                       spaces(63),
                       sep=""))
 
