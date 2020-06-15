@@ -437,7 +437,7 @@ genH <- function(fname, enc, pclaims, pl, directory="hfiles", debug = FALSE) {
 
 
     ## Trailer
-    n_HEH <- length(grep("HEH", fl)) - length(grep("HER", fl))
+    n_HEH <- length(grep("HEH", fl))
     n_HER <- length(grep("HER", fl))
     n_HET <- length(grep("HET", fl))
 
@@ -480,7 +480,7 @@ checklines<- function(hfc) {
 claims.raw <- function(hfc) {
     ln <- readLines(hfc)
     ## Strip irrelevant lines
-    ln <- grep("^(HEH|HET|HXH|HXT|HR4|HR5)", ln, value=T)
+    ln <- grep("^(HEH|HER|HET|HXH|HXT|HR4|HR5)", ln, value=T)
     ## Find find claim indices
     idx <- cumsum(grepl('^(HEH|HXH|HR4)', ln))
     ## Split lines by claim index
@@ -715,10 +715,16 @@ to_phone <- function(hfile, directory = "hfiles") {
     }
   }
 
+  ## Trailer
+  n_HEH <- length(grep("HEH", fl))
+  n_HER <- length(grep("HER", fl))
+  n_HET <- length(grep("HET", fl))
+
+
   fl <- c(fl, paste("HEE",
-                    sprintf("%04g", length(grep("HEH", fl))),
-                    sprintf("%04g", length(grep("HER", fl))),
-                    sprintf("%05g", sum(stringi::stri_count(fl, regex="HET"))),
+                    sprintf("%04g", n_HEH),
+                    sprintf("%04g", n_HER),
+                    sprintf("%05g", n_HET),
                     spaces(63),
                     sep=""))
 
