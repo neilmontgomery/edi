@@ -6,7 +6,7 @@ library(lubridate)
 ## Load the functions
 library(edi)
 
-curr_file <- "files/20200430.xlsx"
+curr_file <- "tst/20200430.xlsx"
 
 pts <- read_excel(curr_file, sheet="pts", col_names=FALSE)
 pts <- pts[!duplicated(pts$...3), ]
@@ -73,10 +73,12 @@ enc <- left_join(enc, ph) %>%
 ## Load all the pfiles
 
 allp.flat <- unlist(claims(dir("../pfiles/", full.names=T)),F,F)
+allp.flat <- claims("tst/PF021202.020")
+
 ## Remove invalids
 allp.flat <- lapply(allp.flat, function(x) x[!substring(x, 45, 46) %in% c("MR", "35")])
 allp.flat <- allp.flat[-which(sapply(allp.flat, length)==1)]
 allp.flat <- allp.flat[-which(!grepl("[AK]48.A", sapply(allp.flat, function(x) x[2], simplify = TRUE)))]
 
-genH(hname(), enc, allp.flat, pl)
+genH(hname(directory = "tst"), enc, allp.flat, pl, directory = "tst")
 

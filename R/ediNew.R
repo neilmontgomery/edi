@@ -122,7 +122,17 @@ visit.type <- function(pn, da, dx, visits) {
         } else {
             vt <- "A488A"
         }
-    } else {
+    } else if(dx == "725") {
+        if(!is.133) {
+          vt <- "A483A"
+        } else if(n.0 < 6) {
+          vt <- "A480A"
+        } else if(n.re < 2) {
+          vt <- "A484A"
+        } else {
+          vt <- "A488A"
+        }
+      } else {
         if(!is.133) {
             vt <- "A483A"
         } else if(n.re < 2) {
